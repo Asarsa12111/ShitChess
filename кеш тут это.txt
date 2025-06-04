@@ -1,0 +1,29 @@
+1. Кэширование оценок позиций
+private Dictionary<string, int> positionCache = new Dictionary<string, int>();
+private int cacheHits = 0;
+private int totalEvaluations = 0;
+positionCache: Это словарь, который хранит оценку для каждой уникальной позиции на доске. Ключом является строка, представляющая состояние доски, а значением — оценка этой позиции.
+cacheHits: Счетчик, который отслеживает количество раз, когда оценка позиции была получена из кэша.
+totalEvaluations: Счетчик, который отслеживает общее количество оценок, произведенных за время игры.
+2. Использование кэша в методе Minimax
+В методе Minimax происходит проверка кэша:
+
+if (positionCache.TryGetValue(positionKey, out int cachedScore))
+{
+    cacheHits++;
+    return cachedScore;
+}
+Если текущая позиция уже оценивалась ранее, то возвращается сохраненная оценка, что позволяет избежать повторных вычислений.
+3. Кэширование возможных ходов
+private readonly Dictionary<(string piece, int row, int col), List<(int row, int col)>> movesCache = new Dictionary<(string piece, int row, int col), List<(int row, int col)>>();
+movesCache: Словарь, который хранит возможные ходы для каждой фигуры на определенной позиции. Ключом является кортеж, состоящий из типа фигуры и её координат, а значением — список возможных ходов.
+Этот кэш используется в методе GetPossibleMovesForPiece, чтобы избежать повторных вычислений возможных ходов для уже проверенной фигуры.
+4. Кэширование изображений и кистей
+private readonly Dictionary<string, ImageSource> imageCache = new Dictionary<string, ImageSource>();
+private readonly Dictionary<string, ImageBrush> imageBrushCache = new Dictionary<string, ImageBrush>();
+Эти словари кэшируют изображения и кисти для шахматных фигур, что позволяет избежать повторного создания объектов, которые могут быть затратными по времени.
+5. Кэширование клеток
+private readonly Dictionary<(int, int), SolidColorBrush> cellBrushCache = new Dictionary<(int, int), SolidColorBrush>();
+Этот словарь хранит кисти для клеток доски, что позволяет быстро получать цвет клетки в зависимости от её координат.
+6. Очистка кэша
+Методы, такие как ClearPositionCache, очищают кэш, чтобы избежать использования устаревших данных после выполнения ходов или изменений в состоянии игры.
